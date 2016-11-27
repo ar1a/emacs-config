@@ -22,6 +22,8 @@
                       rainbow-delimiters
                       flymake-ruby
                       projectile
+                      helm-projectile
+                      powerline
 		      ))
 
 (dolist (p my-packages)
@@ -41,7 +43,7 @@
 (evil-leader/set-key ";" 'comment-dwim)
 (evil-leader/set-key "g" 'magit-status)
 (evil-leader/set-key "u" 'undo-tree-visualize)
-(evil-leader/set-key "e" 'helm-find-files)
+(evil-leader/set-key "e" 'helm-projectile)
 (global-evil-leader-mode)		;
 (global-evil-surround-mode)
 
@@ -143,7 +145,7 @@
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
+    (helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -196,3 +198,6 @@
 
 
 (require 'helm-config)
+
+(require 'powerline)
+(powerline-default-theme)
