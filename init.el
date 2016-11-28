@@ -24,6 +24,8 @@
                       projectile
                       helm-projectile
                       powerline
+                      ruby-end
+                      emmet-mode
 		      ))
 
 (dolist (p my-packages)
@@ -145,7 +147,7 @@
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
+    (emmet-mode ruby-end helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -201,3 +203,10 @@
 
 (require 'powerline)
 (powerline-default-theme)
+
+(require 'ruby-end)
+
+(require 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode)
+
+(electric-pair-mode)
