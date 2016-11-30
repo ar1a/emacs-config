@@ -4,21 +4,22 @@
 
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
 
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+
+
 (defvar my-packages '(evil
-		      evil-leader
-		      evil-org
-		      evil-surround
-		      company
+                      evil-leader
+                      evil-org
+                      evil-surround
+                      company
                       web-mode
-		      helm
+                      helm
                       magit
-		      solarized-theme
+                      solarized-theme
                       rainbow-delimiters
                       flymake-ruby
                       projectile
@@ -26,11 +27,15 @@
                       powerline
                       ruby-end
                       emmet-mode
-		      ))
+                      ))
 
+(setq use-package-always-ensure t)
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+
+(package-initialize)
 
 (require 'evil)
 (require 'evil-leader)
@@ -46,7 +51,7 @@
 (evil-leader/set-key "g" 'magit-status)
 (evil-leader/set-key "u" 'undo-tree-visualize)
 (evil-leader/set-key "e" 'helm-projectile)
-(global-evil-leader-mode)		;
+(global-evil-leader-mode)               ;
 (global-evil-surround-mode)
 
 (evil-mode 1)
