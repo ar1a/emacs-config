@@ -43,6 +43,7 @@ Return a list of installed packages or nil for every skipped package."
 			    'ruby-end
 			    'emmet-mode
 			    'better-defaults
+                            'linum-relative
 			    )
 
 
@@ -225,3 +226,6 @@ Return a list of installed packages or nil for every skipped package."
 (add-hook 'sgml-mode-hook 'emmet-mode)
 
 (electric-pair-mode)
+
+(require 'linum-relative)
+(linum-relative-global-mode)
