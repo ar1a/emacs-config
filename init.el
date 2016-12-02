@@ -3,7 +3,7 @@
 
 
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
+             '("melpa" . "https://melpa.org/packages/") t)
 
 
 (defun ensure-package-installed (&rest packages)
@@ -26,7 +26,7 @@ Return a list of installed packages or nil for every skipped package."
 ;; Activate installed packages
 (package-initialize)
 
-(ensure-package-installed  'evil
+(ensure-package-installed   'evil
 			    'evil-leader
 			    'evil-org
 			    'evil-surround
@@ -42,6 +42,7 @@ Return a list of installed packages or nil for every skipped package."
 			    'powerline
 			    'ruby-end
 			    'emmet-mode
+			    'better-defaults
 			    )
 
 
