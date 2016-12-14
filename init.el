@@ -45,6 +45,7 @@ Return a list of installed packages or nil for every skipped package."
 			    'better-defaults
                             'linum-relative
                             'android-mode
+                            'org-bullets
 			    )
 
 
@@ -166,7 +167,7 @@ Return a list of installed packages or nil for every skipped package."
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (company-auctex linum-relative better-defaults emmet-mode ruby-end helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
+    (org-bullets company-auctex linum-relative better-defaults emmet-mode ruby-end helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -235,6 +236,16 @@ Return a list of installed packages or nil for every skipped package."
 
 (require 'android-mode)
 
+(require 'ox-latex)
+(unless (boundp 'org-latex-classes)
+  (setq org-latex-classes nil))
+(add-to-list 'org-latex-classes
+             '("article"
+               "\\documentclass{article}"
+               ("\\section{%s}" . "\\section*{%s}")))
+
 
 (global-set-key [f3] 'compile)
 (global-set-key [f4] 'next-error)
+
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
