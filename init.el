@@ -44,6 +44,7 @@ Return a list of installed packages or nil for every skipped package."
 			    'emmet-mode
 			    'better-defaults
                             'linum-relative
+                            'android-mode
 			    )
 
 
@@ -123,6 +124,7 @@ Return a list of installed packages or nil for every skipped package."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(android-mode-sdk-dir "/opt/android-sdk")
  '(ansi-color-names-vector
    ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#657b83"])
  '(compilation-message-face (quote default))
@@ -163,7 +165,7 @@ Return a list of installed packages or nil for every skipped package."
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (emmet-mode ruby-end helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
+    (company-auctex linum-relative better-defaults emmet-mode ruby-end helm-projectile solarized-theme web-mode rainbow-delimiters projectile magit flymake-ruby evil-surround evil-org company)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -229,3 +231,9 @@ Return a list of installed packages or nil for every skipped package."
 
 (require 'linum-relative)
 (linum-relative-global-mode)
+
+(require 'android-mode)
+
+
+(global-set-key [f3] 'compile)
+(global-set-key [f4] 'next-error)
