@@ -63,6 +63,7 @@ Return a list of installed packages or nil for every skipped package."
 (evil-leader/set-key "g" 'magit-status)
 (evil-leader/set-key "u" 'undo-tree-visualize)
 (evil-leader/set-key "e" 'helm-projectile)
+(evil-leader/set-key "b" 'helm-buffers-list)
 (global-evil-leader-mode)               ;
 (global-evil-surround-mode)
 
