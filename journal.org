@@ -1,0 +1,232 @@
+# -*- mode: org -*-
+# -*- coding: utf-8 -*-
+#+STARTUP: overview indent inlineimages logdrawer
+#+TITLE: Journal
+#+AUTHOR: Aria
+#+LANGUAGE: en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+
+* Initial looks and fixes
+** MELPA
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(package-initialize)
+(setq package-archives
+'(("MELPA" . "https://melpa.org/packages/")))
+#+END_SRC
+** Ensure packages installed
+First the function and preliminary
+#+BEGIN_SRC emacs-lisp
+  (defun ensure-package-installed (&rest packages)
+    (mapcar
+     (lambda (package)
+       (if (package-installed-p package) nil
+         (if (y-or-n-p (format "Package %s is missing. Install it? " package))
+             (package-install package)
+           package)))
+     packages))
+
+  (or (file-exists-p package-user-dir)
+      (package-refresh-contents))
+#+END_SRC
+
+Now the packages
+#+BEGIN_SRC emacs-lisp
+  (ensure-package-installed   'evil
+                              'evil-leader
+                              'evil-org
+                              'evil-surround
+                              'evil-mu4e
+                              'company
+                              'web-mode
+                              'helm
+                              'magit
+                              'solarized-theme
+                              'rainbow-delimiters
+                              'flymake-ruby
+                              'projectile
+                              'helm-projectile
+                              'powerline
+                              'ruby-end
+                              'emmet-mode
+                              'better-defaults
+                              'linum-relative
+                              'android-mode
+                              'org-bullets
+                              )
+#+END_SRC
+** Loading babel
+#+BEGIN_SRC emacs-lisp
+(require 'org-install)
+(require 'org)
+#+END_SRC
+** Turn off menu bar
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+#+END_SRC
+** Remove splash screen
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-splash-screen t)
+#+END_SRC
+** Change all yes/no questions to y/n type
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+** Solarized
+#+BEGIN_SRC emacs-lisp
+(load-theme 'solarized-dark t)
+#+END_SRC
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+(global-linum-mode 1)
+(column-number-mode 1)
+
+(require 'linum-relative)
+(linum-relative-global-mode)
+#+END_SRC
+** Stop littering everywhere with save files
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs-backups")))
+#+END_SRC
+** Nice completion for commands
+#+BEGIN_SRC emacs-lisp
+(ido-mode 1)
+(setq ido-enable-flex-matching t)
+(setq ido0everywhere t)
+#+END_SRC
+** Params
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+#+END_SRC
+Auto pair parentheses
+#+BEGIN_SRC emacs-lisp
+(electric-pair-mode)
+#+END_SRC
+** Project-ation
+#+BEGIN_SRC emacs-lisp
+(require 'projectile)
+(projectile-global-mode)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'helm-config)
+#+END_SRC
+** Powerline
+#+BEGIN_SRC emacs-lisp
+(require 'powerline)
+(powerline-default-theme)
+#+END_SRC
+** Compile-friendly keybinds
+#+BEGIN_SRC emacs-lisp
+(global-set-key [f3] 'compile)
+(global-set-key [f4] 'next-error)
+#+END_SRC
+* Evil mode
+** Requirements
+#+BEGIN_SRC emacs-lisp
+(require 'evil)
+(require 'evil-leader)
+(require 'evil-org)
+(require 'evil-surround)
+(require 'evil-mu4e)
+#+END_SRC
+** Leaders
+#+BEGIN_SRC emacs-lisp
+  (evil-leader/set-leader "\\")
+  (evil-leader/set-key "q" 'kill-this-buffer)
+  (evil-leader/set-key "p" 'fill-paragraph)
+  (evil-leader/set-key "a" 'align)
+  (evil-leader/set-key "<tab>" 'indent-region)
+  (evil-leader/set-key ";" 'comment-dwim)
+  (evil-leader/set-key "g" 'magit-status)
+  (evil-leader/set-key "u" 'undo-tree-visualize)
+  (evil-leader/set-key "e" 'helm-projectile)
+  (evil-leader/set-key "b" 'helm-buffers-list)
+  (evil-leader/set-key "m" 'mu4e)
+  (global-evil-leader-mode)               ;
+  (global-evil-surround-mode)
+#+END_SRC
+** Enable evil-mode
+#+BEGIN_SRC emacs-lisp
+  (evil-mode 1)
+#+END_SRC
+* Org
+** Org bullets
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
+* Autocompletion
+** Company-mode everywhere
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 'global-company-mode)
+#+END_SRC
+** Ruby
+#+BEGIN_SRC emacs-lisp
+(require 'flymake-ruby)
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+#+END_SRC
+** Android
+#+BEGIN_SRC emacs-lisp
+(require 'android-mode)
+#+END_SRC
+* Web
+** Requirements
+#+BEGIN_SRC emacs-lisp
+(require 'web-mode)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'emmet-mode)
+#+END_SRC
+** Add files to web-mode
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode))
+#+END_SRC
+** Enable emmet
+#+BEGIN_SRC emacs-lisp
+(add-hook 'sgml-mode-hook 'emmet-mode)
+#+END_SRC
+* Email
+** Requirements
+#+BEGIN_SRC emacs-lisp
+  (require 'mu4e)
+#+END_SRC
+** Setup mu4e
+#+BEGIN_SRC emacs-lisp
+
+
+  (setq mu4e-maildir (expand-file-name "~/Maildir"))
+
+  (setq mu4e-drafts-folder "/[Gmail].Drafts")
+  (setq mu4e-sent-folder "/[Gmail].Sent Mail")
+  (setq mu4e-trash-folder "/[Gmail].Trash")
+
+  (setq mu4e-sent-messages-behavior 'delete)
+  (setq mu4e-maildir-shortcuts
+        '(("/INBOX" . ?i)
+          ("/[Gmail].Sent Mail" . ?s)
+          ("/[Gmail].Trash" . ?t)))
+
+  (setq mu4e-get-mail-command "offlineimap")
+
+  (setq
+   user-mail-address "blackstab1337@gmail.com"
+   user-full-name "Aria")
+
+  (require 'smtpmail)
+
+  (setq message-send-mail-function 'smtpmail-send-it
+        starttls-use-gnutls t
+        smtpmail-starttls-credentials
+        '(("smtp.gmail.com" 587 nil nil))
+        smtpmail-auth-credentials
+        (expand-file-name "~/authinfo.gpg")
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
+        smtpmail-debug-info t)
+
+#+END_SRC
