@@ -156,6 +156,11 @@ Auto pair parentheses
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
+** Other cosmetics 
+** Default directory
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/org/")
+#+END_SRC 
 * Autocompletion
 ** Company-mode everywhere
 #+BEGIN_SRC emacs-lisp
@@ -190,6 +195,7 @@ Auto pair parentheses
 (add-hook 'sgml-mode-hook 'emmet-mode)
 #+END_SRC
 * Email
+https://gist.github.com/areina/3879626
 ** Requirements
 #+BEGIN_SRC emacs-lisp
   (require 'mu4e)
@@ -211,6 +217,7 @@ Auto pair parentheses
           ("/[Gmail].Trash" . ?t)))
 
   (setq mu4e-get-mail-command "offlineimap")
+  (setq mu4e-html2text-command "w3m -dump -T text/html")
 
   (setq
    user-mail-address "blackstab1337@gmail.com"
@@ -229,4 +236,10 @@ Auto pair parentheses
         smtpmail-smtp-service 587
         smtpmail-debug-info t)
 
+#+END_SRC
+* Small changes 
+** C indent style
+#+BEGIN_SRC emacs-lisp
+  (setq c-default-stype "k&r")
+  (setq c-basic-offset 2)
 #+END_SRC
