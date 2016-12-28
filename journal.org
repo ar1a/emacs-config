@@ -54,6 +54,12 @@ Now the packages
                               'linum-relative
                               'android-mode
                               'org-bullets
+                              'go-mode
+                              'exec-path-from-shell
+                              'go-autocomplete
+                              'go-eldoc
+                              'flycheck-gometalinter
+                              'wanderlust
                               )
 #+END_SRC
 ** Loading babel
@@ -122,6 +128,19 @@ Auto pair parentheses
 (global-set-key [f3] 'compile)
 (global-set-key [f4] 'next-error)
 #+END_SRC
+** Get PATH from environment
+#+BEGIN_SRC emacs-lisp
+  (defun set-exec-path-from-shell-PATH ()
+    (let ((path-from-shell (replace-regexp-in-string
+                            "[ \t\n]*$"
+                            ""
+                            (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+      (setenv "PATH" path-from-shell)
+      (setq eshell-path-env path-from-shell) ; for eshell users
+      (setq exec-path (split-string path-from-shell path-separator))))
+
+  (when window-system (set-exec-path-from-shell-PATH))
+#+END_SRC
 * Evil mode
 ** Requirements
 #+BEGIN_SRC emacs-lisp
@@ -143,7 +162,7 @@ Auto pair parentheses
   (evil-leader/set-key "u" 'undo-tree-visualize)
   (evil-leader/set-key "e" 'helm-projectile)
   (evil-leader/set-key "b" 'helm-buffers-list)
-  (evil-leader/set-key "m" 'mu4e)
+  (evil-leader/set-key "m" 'wl)
   (global-evil-leader-mode)               ;
   (global-evil-surround-mode)
 #+END_SRC
@@ -175,6 +194,38 @@ Auto pair parentheses
 #+BEGIN_SRC emacs-lisp
 (require 'android-mode)
 #+END_SRC
+** Golang
+Godoc fix
+#+BEGIN_SRC emacs-lisp
+  (setenv "GOPATH" "/home/aria/projects/gocode")
+#+END_SRC
+Gofmt before save
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'exec-path "/home/aria/projects/gocode/bin")
+  (add-hook 'before-save-hook 'gofmt-before-save)
+#+END_SRC
+Autocompletion
+#+BEGIN_SRC emacs-lisp
+  (require 'auto-complete-config)
+  (require 'go-autocomplete)
+  (require 'flycheck-gometalinter)
+  (flycheck-gometalinter-setup)
+  (add-hook 'go-mode-hook 'auto-complete-mode)
+#+END_SRC
+Imports
+#+BEGIN_SRC emacs-lisp
+  (defun go-mode-setup ()
+    (go-eldoc-setup)
+    (setq gofmt-command "goimports")
+    (add-hook 'before-save-hook 'gofmt-before-save))
+  (add-hook 'go-mode-hook 'go-mode-setup)
+#+END_SRC
+Linting
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path (concat (getenv "GOPATH")
+                                 "/src/github.com/golang/lint/misc/emacs"))
+  (require 'golint)
+#+END_SRC
 * Web
 ** Requirements
 #+BEGIN_SRC emacs-lisp
@@ -195,48 +246,59 @@ Auto pair parentheses
 (add-hook 'sgml-mode-hook 'emmet-mode)
 #+END_SRC
 * Email
-https://gist.github.com/areina/3879626
-** Requirements
+** Setup wanderlust
 #+BEGIN_SRC emacs-lisp
-  (require 'mu4e)
+  (autoload 'wl "wl" "Wanderlust" t)
+
+
+  (setq wl-message-ignored-field-list '("^.*:")
+        wl-message-visible-field-list
+        '("^\\(To\\|CC\\):"
+          "^Subject:"
+          "^\\(From\\|Reply-To\\):"
+          "^Organization:"
+          "^Message-Id:"
+          "^\\(Posted\\|Date\\):"
+          )
+        wl-message-sort-field-list
+        '("^From"
+          "^Organization:"
+          "^X-Attribution:"
+          "^Subject"
+          "^Date"
+          "^To"
+          "^Cc"
+          )
+        )
 #+END_SRC
-** Setup mu4e
+** Setup gmail
 #+BEGIN_SRC emacs-lisp
+  (setq elmo-imap4-default-server "imap.gmail.com"
+        elmo-imap4-default-user "blackstab1337@gmail.com"
+        elmo-imap4-default-authenticate-type 'clear
+        elmo-imap4-default-port '993
+        elmo-imap4-default-stream-type 'ssl
 
+        elmo-imap4-use-modified-utf7 t)
 
-  (setq mu4e-maildir (expand-file-name "~/Maildir"))
+  (setq wl-smtp-connection-type 'starttls
+        wl-smtp-posting-port 587
+        wl-smtp-authenticate-type "plain"
+        wl-smtp-posting-user "blackstab1337"
+        wl-smtp-posting-server "smtp.gmail.com"
+        wl-local-domain "gmail.com"
+        wl-message-id-domain "smtp.gmail.com")
 
-  (setq mu4e-drafts-folder "/[Gmail].Drafts")
-  (setq mu4e-sent-folder "/[Gmail].Sent Mail")
-  (setq mu4e-trash-folder "/[Gmail].Trash")
+  (setq wl-from "Aria <blackstab1337@gmail.com>"
+        wl-default-folder "%inbox"
+        ;; wl-draft-folder "%[Gmail]/Drafts"
+        wl-draft-folder ".draft"
+        wl-trash-folder "%[Gmail]/Trash"
 
-  (setq mu4e-sent-messages-behavior 'delete)
-  (setq mu4e-maildir-shortcuts
-        '(("/INBOX" . ?i)
-          ("/[Gmail].Sent Mail" . ?s)
-          ("/[Gmail].Trash" . ?t)))
+        wl-fcc-force-as-read t
 
-  (setq mu4e-get-mail-command "offlineimap")
-  (setq mu4e-html2text-command "w3m -dump -T text/html")
-
-  (setq
-   user-mail-address "blackstab1337@gmail.com"
-   user-full-name "Aria")
-
-  (require 'smtpmail)
-
-  (setq message-send-mail-function 'smtpmail-send-it
-        starttls-use-gnutls t
-        smtpmail-starttls-credentials
-        '(("smtp.gmail.com" 587 nil nil))
-        smtpmail-auth-credentials
-        (expand-file-name "~/authinfo.gpg")
-        smtpmail-default-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
-        smtpmail-debug-info t)
-
-#+END_SRC
+        wl-default-spec "%")
+#+END_SRC 
 * Small changes 
 ** C indent style
 #+BEGIN_SRC emacs-lisp
