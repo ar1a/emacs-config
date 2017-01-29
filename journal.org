@@ -60,6 +60,7 @@ Now the packages
                               'go-eldoc
                               'flycheck-gometalinter
                               'wanderlust
+                              'company-irony
                               )
 #+END_SRC
 ** Loading babel
@@ -181,10 +182,21 @@ Auto pair parentheses
   (setq org-directory "~/org/")
 #+END_SRC 
 * Autocompletion
-** Company-mode everywhere
+** Company
 #+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 'global-company-mode)
+  (add-hook 'after-init-hook 'global-company-mode)
+
+  (eval-after-load 'company
+    '(progn
+       (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+       (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)))
 #+END_SRC
+** C++
+Irony mode for company
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony))
+#+END_SRC 
 ** Ruby
 #+BEGIN_SRC emacs-lisp
 (require 'flymake-ruby)
