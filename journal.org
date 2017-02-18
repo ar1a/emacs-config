@@ -238,6 +238,10 @@ Linting
                                  "/src/github.com/golang/lint/misc/emacs"))
   (require 'golint)
 #+END_SRC
+** Flycheck
+#+BEGIN_SRC emacs-lisp
+  (global-flycheck-mode)
+#+END_SRC 
 * Web
 ** Requirements
 #+BEGIN_SRC emacs-lisp
@@ -255,7 +259,7 @@ Linting
 #+END_SRC
 ** Enable emmet
 #+BEGIN_SRC emacs-lisp
-(add-hook 'sgml-mode-hook 'emmet-mode)
+(add-hook 'web-mode-hook 'emmet-mode)
 #+END_SRC
 * Email
 ** Setup wanderlust
