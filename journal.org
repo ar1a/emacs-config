@@ -181,6 +181,11 @@ Auto pair parentheses
 #+BEGIN_SRC emacs-lisp
   (setq org-directory "~/org/")
 #+END_SRC 
+** org-capture
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c c") 'org-capture)
+  (setq org-default-notes-file "~/organiser.org")
+#+END_SRC
 * Autocompletion
 ** Company
 #+BEGIN_SRC emacs-lisp
